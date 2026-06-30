@@ -3,45 +3,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Food Chain Simulation</title>
+  <title>Food Chain Explorer</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="app">
-    <section class="hero" aria-labelledby="page-title">
-      <p class="eyebrow">Ecosystem Explorer</p>
-      <h1 id="page-title">Interactive Food Chain</h1>
-      <p class="intro">
-        Click an organism to learn its role, then remove one organism to see how energy flow and population balance change.
-      </p>
+  <main class="app" aria-live="polite">
+    <nav class="topbar" aria-label="Lesson navigation">
+      <strong>Food Chain Explorer</strong>
+      <span id="scene-counter">Scene 1 of 13</span>
+    </nav>
+
+    <section id="scene-welcome" class="scene active welcome-scene" aria-labelledby="welcome-title">
+      <div class="sky" aria-hidden="true">
+        <div class="sun">☀️</div>
+        <div class="cloud cloud-one"></div>
+        <div class="cloud cloud-two"></div>
+        <div class="birds">⌁ ⌁ ⌁</div>
+      </div>
+      <div class="hero-card">
+        <p class="eyebrow">Interactive Learning Material</p>
+        <h1 id="welcome-title">Food Chain Explorer</h1>
+        <p class="intro">Welcome! Today you will discover how energy moves through living organisms using an interactive food chain.</p>
+        <div class="ecosystem-strip" aria-label="Animated ecosystem food chain">
+          <span>☀️ Sun</span><span>🌱 Grass</span><span>🦗 Grasshopper</span><span>🐸 Frog</span><span>🐍 Snake</span><span>🦅 Hawk</span>
+        </div>
+        <div class="button-row">
+          <button class="primary" data-goto="objectives">Start Lesson</button>
+          <button class="secondary" data-goto="objectives">Learning Objectives</button>
+          <button class="ghost" id="exit-button">Exit</button>
+        </div>
+      </div>
     </section>
 
-    <section class="simulation" aria-label="Food chain simulation">
-      <div id="chain" class="chain" aria-live="polite"></div>
-
-      <aside class="info-panel" aria-labelledby="role-title">
-        <h2 id="role-title">Select an organism</h2>
-        <p id="role-description">Choose grass, grasshopper, frog, snake, or hawk to highlight its role in the food chain.</p>
-        <dl class="status-list">
-          <div>
-            <dt>Energy path</dt>
-            <dd id="energy-path">Grass → Grasshopper → Frog → Snake → Hawk</dd>
-          </div>
-          <div>
-            <dt>Ecosystem change</dt>
-            <dd id="impact-text">The full food chain is balanced.</dd>
-          </div>
-        </dl>
-        <button id="remove-button" type="button">Remove one organism</button>
-        <button id="reset-button" type="button" class="secondary">Reset chain</button>
-      </aside>
+    <section id="scene-objectives" class="scene" aria-labelledby="objectives-title">
+      <div class="notebook">
+        <p class="eyebrow">Lesson Objectives</p>
+        <h2 id="objectives-title">Today’s lesson will help you:</h2>
+        <ul class="check-list">
+          <li>Explain food chains</li>
+          <li>Identify trophic levels</li>
+          <li>Trace energy flow</li>
+          <li>Predict ecosystem changes</li>
+          <li>Analyze ecosystem balance</li>
+        </ul>
+      </div>
+      <button class="primary next" data-goto="definition">Next</button>
     </section>
 
-    <section class="quiz" aria-labelledby="quiz-title">
+    <section id="scene-definition" class="scene" aria-labelledby="definition-title">
+      <p class="eyebrow">What is a Food Chain?</p>
+      <h2 id="definition-title">Energy moves from one organism to another.</h2>
+      <p class="narration">A food chain shows how energy moves from one organism to another. Click any organism to reveal its role.</p>
+      <div id="definition-chain" class="vertical-chain"></div>
+      <div id="organism-popup" class="popup" role="status">Click an organism to learn more.</div>
+      <button class="primary next" data-goto="energy">Next</button>
+    </section>
+
+    <section id="scene-energy" class="scene" aria-labelledby="energy-title">
+      <p class="eyebrow">Energy Flow</p>
+      <h2 id="energy-title">Yellow arrows show energy transfer.</h2>
+      <div id="energy-chain" class="vertical-chain energy-chain paused"></div>
+      <div class="button-row">
+        <button id="play-energy" class="primary">Tap Play Animation</button>
+        <button class="secondary next" data-goto="trophic">Next</button>
+      </div>
+      <article class="chatbot" aria-label="AI chatbot simulation">
+        <h3>AI Helper</h3>
+        <button id="ask-energy" class="question-chip">Why does energy decrease?</button>
+        <p id="chatbot-answer">Ask the AI helper a food-chain question.</p>
+      </article>
+    </section>
+
+    <section id="scene-trophic" class="scene" aria-labelledby="trophic-title">
+      <p class="eyebrow">Trophic Levels</p>
+      <h2 id="trophic-title">Click each pyramid level.</h2>
+      <div class="pyramid-layout">
+        <div id="trophic-pyramid" class="pyramid"></div>
+        <aside id="trophic-info" class="info-card">Choose a level to view its definition, role, and examples.</aside>
+      </div>
+      <button class="primary next" data-goto="simulation">Next</button>
+    </section>
+
+    <section id="scene-simulation" class="scene" aria-labelledby="simulation-title">
+      <p class="eyebrow">Interactive Simulation</p>
+      <h2 id="simulation-title">What Happens if One Organism Disappears?</h2>
+      <div id="simulation-chain" class="horizontal-chain"></div>
+      <div id="population-bars" class="population-bars"></div>
+      <div id="remove-buttons" class="button-row wrap"></div>
+      <p id="ai-feedback" class="feedback-panel">Choose an organism to remove and watch the ecosystem respond.</p>
+      <button class="secondary" id="reset-simulation">Reset Simulation</button>
+      <button class="primary next" data-goto="dragdrop">Next</button>
+    </section>
+
+    <section id="scene-dragdrop" class="scene" aria-labelledby="drag-title">
+      <p class="eyebrow">Drag-and-Drop Activity</p>
+      <h2 id="drag-title">Arrange the organisms correctly.</h2>
+      <div id="card-bank" class="card-bank"></div>
+      <div id="drop-zone" class="drop-zone" aria-label="Drop organisms here"></div>
+      <div class="button-row">
+        <button id="check-order" class="primary">Check Answers</button>
+        <button id="hint-order" class="secondary">Hint</button>
+        <button class="secondary next" data-goto="scenario">Next</button>
+      </div>
+      <p id="drag-feedback" class="feedback-panel">Drag or click cards into the chain order.</p>
+    </section>
+
+    <section id="scene-scenario" class="scene" aria-labelledby="scenario-title">
+      <p class="eyebrow">Scenario-Based Activity</p>
+      <h2 id="scenario-title">A disease killed all the grass. Predict what happens.</h2>
+      <div id="scenario-options" class="answer-list"></div>
+      <p id="scenario-feedback" class="feedback-panel">Choose an answer for immediate feedback.</p>
+      <button class="primary next" data-goto="foodweb">Next</button>
+    </section>
+
+    <section id="scene-foodweb" class="scene" aria-labelledby="foodweb-title">
+      <p class="eyebrow">Food Web Extension</p>
+      <h2 id="foodweb-title">Click organisms to highlight possible food chains.</h2>
+      <div id="food-web" class="food-web"></div>
+      <p id="web-feedback" class="feedback-panel">A food web has many connected feeding relationships.</p>
+      <button class="primary next" data-goto="quiz">Next</button>
+    </section>
+
+    <section id="scene-quiz" class="scene" aria-labelledby="quiz-title">
       <p class="eyebrow">Knowledge Check</p>
-      <h2 id="quiz-title">Food Chain Quiz</h2>
-      <p class="quiz-intro">Choose one answer for each question to get instant feedback and an explanation.</p>
+      <h2 id="quiz-title">10 Multiple-Choice Questions</h2>
       <div id="quiz-list" class="quiz-list"></div>
+      <p id="score-display" class="score">Score: 0 / 10</p>
+      <button class="primary next" data-goto="summary">Next</button>
+    </section>
+
+    <section id="scene-summary" class="scene" aria-labelledby="summary-title">
+      <div class="summary-ecosystem">☀️ 🌱 🦗 🐸 🐍 🦅 🍄</div>
+      <p class="eyebrow">Summary</p>
+      <h2 id="summary-title">Today you learned</h2>
+      <ul class="check-list columns">
+        <li>Food chain</li><li>Producers</li><li>Consumers</li><li>Decomposers</li><li>Energy flow</li><li>Ecosystem balance</li>
+      </ul>
+      <button class="primary next" data-goto="reflection">Next</button>
+    </section>
+
+    <section id="scene-reflection" class="scene" aria-labelledby="reflection-title">
+      <p class="eyebrow">Reflection</p>
+      <h2 id="reflection-title">What would happen if humans removed predators from an ecosystem?</h2>
+      <textarea id="reflection-response" rows="6" placeholder="Type your prediction here..."></textarea>
+      <div class="button-row">
+        <button id="reflect-submit" class="primary">Get AI Feedback</button>
+        <button class="secondary next" data-goto="completion">Next</button>
+      </div>
+      <p id="reflection-feedback" class="feedback-panel">Your AI formative feedback will appear here.</p>
+    </section>
+
+    <section id="scene-completion" class="scene completion" aria-labelledby="completion-title">
+      <div class="confetti" aria-hidden="true"></div>
+      <div class="badge">🏅</div>
+      <h2 id="completion-title">Congratulations!</h2>
+      <p>You have completed the Food Chain Explorer lesson.</p>
+      <div class="button-row">
+        <button class="primary" data-goto="welcome">Review Lesson</button>
+        <button class="secondary" data-goto="quiz">Retake Quiz</button>
+        <button class="ghost" id="final-exit">Exit</button>
+      </div>
     </section>
   </main>
 
