@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Food Chain Simulation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Ecosystem Explorer</p>
+      <h1 id="page-title">Interactive Food Chain</h1>
+      <p class="intro">
+        Click an organism to learn its role, then remove one organism to see how energy flow and population balance change.
+      </p>
+    </section>
+
+    <section class="simulation" aria-label="Food chain simulation">
+      <div id="chain" class="chain" aria-live="polite"></div>
+
+      <aside class="info-panel" aria-labelledby="role-title">
+        <h2 id="role-title">Select an organism</h2>
+        <p id="role-description">Choose grass, grasshopper, frog, snake, or hawk to highlight its role in the food chain.</p>
+        <dl class="status-list">
+          <div>
+            <dt>Energy path</dt>
+            <dd id="energy-path">Grass → Grasshopper → Frog → Snake → Hawk</dd>
+          </div>
+          <div>
+            <dt>Ecosystem change</dt>
+            <dd id="impact-text">The full food chain is balanced.</dd>
+          </div>
+        </dl>
+        <button id="remove-button" type="button">Remove one organism</button>
+        <button id="reset-button" type="button" class="secondary">Reset chain</button>
+      </aside>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
