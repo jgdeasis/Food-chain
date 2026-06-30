@@ -43,6 +43,7 @@ const energyPath = document.querySelector('#energy-path');
 const impactText = document.querySelector('#impact-text');
 const removeButton = document.querySelector('#remove-button');
 const resetButton = document.querySelector('#reset-button');
+const quizList = document.querySelector('#quiz-list');
 
 let activeName = null;
 let removedNames = new Set();
@@ -139,7 +140,74 @@ function resetChain() {
   renderChain();
 }
 
+const quizQuestions = [
+  {
+    question: 'Which organism is the producer in this food chain?',
+    answers: ['Grass', 'Frog', 'Hawk'],
+    correctAnswer: 'Grass',
+    explanation: 'Grass is correct because producers use sunlight to make their own food and provide energy for consumers.'
+  },
+  {
+    question: 'What is most likely to happen if frogs are removed?',
+    answers: [
+      'Grasshoppers may increase because fewer frogs eat them.',
+      'Hawks immediately become producers.',
+      'Grass disappears because snakes eat it.'
+    ],
+    correctAnswer: 'Grasshoppers may increase because fewer frogs eat them.',
+    explanation: 'Frogs eat grasshoppers, so removing frogs can allow more grasshoppers to survive and can also reduce food for snakes.'
+  }
+];
+
+function renderQuiz() {
+  quizQuestions.forEach((item, questionIndex) => {
+    const quizCard = document.createElement('article');
+    quizCard.className = 'quiz-card';
+
+    const question = document.createElement('p');
+    question.className = 'quiz-question';
+    question.textContent = `${questionIndex + 1}. ${item.question}`;
+    quizCard.appendChild(question);
+
+    const answerList = document.createElement('div');
+    answerList.className = 'answer-list';
+
+    item.answers.forEach((answer) => {
+      const answerButton = document.createElement('button');
+      answerButton.type = 'button';
+      answerButton.className = 'answer-choice';
+      answerButton.textContent = answer;
+      answerButton.addEventListener('click', () => checkAnswer(item, answer, quizCard, answerList));
+      answerList.appendChild(answerButton);
+    });
+
+    quizCard.appendChild(answerList);
+    quizList.appendChild(quizCard);
+  });
+}
+
+function checkAnswer(item, selectedAnswer, quizCard, answerList) {
+  const isCorrect = selectedAnswer === item.correctAnswer;
+
+  answerList.querySelectorAll('.answer-choice').forEach((button) => {
+    button.disabled = true;
+    if (button.textContent === item.correctAnswer) button.classList.add('correct');
+    if (button.textContent === selectedAnswer && !isCorrect) button.classList.add('incorrect');
+  });
+
+  const previousFeedback = quizCard.querySelector('.feedback');
+  if (previousFeedback) previousFeedback.remove();
+
+  const feedback = document.createElement('p');
+  feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+  feedback.textContent = isCorrect
+    ? `Great job! ${item.explanation}`
+    : `Good try! The correct answer is “${item.correctAnswer}.” ${item.explanation}`;
+  quizCard.appendChild(feedback);
+}
+
 removeButton.addEventListener('click', removeNextOrganism);
 resetButton.addEventListener('click', resetChain);
 
 renderChain();
+renderQuiz();
